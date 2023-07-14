@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import EmployeeForm from "./EmployeeForm";
 import PageHeader from "../../components/PageHeader";
 import PeopleOutlineTwoToneIcon from "@material-ui/icons/PeopleOutlineTwoTone";
@@ -11,6 +11,7 @@ import {
   Toolbar,
   InputAdornment,
 } from "@material-ui/core";
+import axios from "axios";
 import UseTable from "../../components/UseTable";
 import * as employeeService from "../../service/employeeService";
 import Controls from "../../components/controls/Controls";
@@ -37,35 +38,42 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const headCells = [
-  { id: "fullName", label: "Employee Name" },
-  { id: "email", label: "Email Address (Personal)" },
+  { id: "name", label: "Student Name" },
+  { id: "email", label: "Email Address" },
   { id: "mobile", label: "Mobile Number" },
-  { id: "department", label: "Department" },
+  { id: "className", label: "Department" },
   { id: "actions", label: "Actions", disableSorting: true },
 ];
 
 export default function Employees() {
   const classes = useStyles();
   const [recordForEdit, setRecordForEdit] = useState(null);
-  const [records, setRecords] = useState(employeeService.getAllEmployees());
+  const [records, setRecords] = useState([]);
   const [filterFn, setFilterFn] = useState({
     fn: (items: any) => {
       return items;
     },
   });
+  useEffect(()=>{
+    axios.get("http://localhost:4000/student").then((res:any)=>{
+      console.log("getting response", res?.data?.data);
+      setRecords(res?.data?.data);
+    })
+  },[])
+  console.log("getting all employee", records);
   const [openPopup, setOpenPopup] = useState(false);
   const [notify, setNotify] = useState({
     isOpen: false,
     message: "",
     type: "",
   });
-  const [confirmDialog, setConfirmDialog] = useState({
+  const [confirmDialog, setConfirmDialog]: any = useState({
     isOpen: false,
     title: "",
     subTitle: "",
   });
 
-  const { TblContainer, TblHead , recordsAfterPagingAndSorting } =
+  const { TblContainer, TblHead , TblPagination } =
   UseTable(records, headCells, filterFn);
 
   const handleSearch = (e:any) => {
@@ -75,19 +83,20 @@ export default function Employees() {
         if (target.value === "") return items;
         else
           return items.filter((x:any) =>
-            x.fullName.toLowerCase().includes(target.value)
+            x.name.toLowerCase().includes(target.value)
           );
       },
     });
   };
 
   const addOrEdit = (employee: any, resetForm: any) => {
+    console.log("employee data", employee);
     if (employee.id === 0) employeeService.insertEmployee(employee);
     else employeeService.updateEmployee(employee);
     resetForm();
     setRecordForEdit(null);
     setOpenPopup(false);
-    setRecords(employeeService.getAllEmployees());
+    // setRecords(employeeService.getAllEmployees());
     setNotify({
       isOpen: true,
       message: "Submitted Successfully",
@@ -100,13 +109,16 @@ export default function Employees() {
     setOpenPopup(true);
   };
 
-  const onDelete = (id: any) => {
+  const onDelete = (id = "64b0d48726d2ffeaffd3c8e3") => {
+    console.log("getting ID", id);
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false,
     });
-    employeeService.deleteEmployee(id);
-    setRecords(employeeService.getAllEmployees());
+    // employeeService.deleteEmployee(id);
+    axios.delete(`http://localhost:4000/student/64b0ea514babcfad5c940eb4`).then((res:any)=>{
+      console.log("getting response", res?.data?.data);
+    })
     setNotify({
       isOpen: true,
       message: "Deleted Successfully",
@@ -149,12 +161,13 @@ export default function Employees() {
         <TblContainer>
           <TblHead />
           <TableBody>
-            {/* {recordsAfterPagingAndSorting().map((item: any) => (
-              <TableRow key={item.id}>
-                <TableCell>{item.fullName}</TableCell>
+            
+            { records.map((item: any) => (
+              <TableRow key={item._id}>
+                <TableCell>{item.name}</TableCell>
                 <TableCell>{item.email}</TableCell>
                 <TableCell>{item.mobile}</TableCell>
-                <TableCell>{item.department}</TableCell>
+                <TableCell>{item.className}</TableCell>
                 <TableCell>
                   <Controls.ActionButton
                     color="primary"
@@ -171,9 +184,9 @@ export default function Employees() {
                         isOpen: true,
                         title: "Are you sure to delete this record?",
                         subTitle: "You can't undo this operation",
-                        // onConfirm: () => {
-                        //   onDelete(item.id);
-                        // },
+                        onConfirm: () => {
+                          onDelete(item._id);
+                        },
                       });
                     }}
                   >
@@ -181,10 +194,10 @@ export default function Employees() {
                   </Controls.ActionButton>
                 </TableCell>
               </TableRow>
-            ))} */}
+            ))}
           </TableBody>
         </TblContainer>
-        {/* <TblPagination /> */}
+        <TblPagination />
       </Paper>
       <Popup
         title="Employee Form"

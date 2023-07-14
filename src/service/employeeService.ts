@@ -1,13 +1,8 @@
-const KEYS: any = {
-    employees: 'employees',
-    employeeId: 'employeeId'
-}
-
 export const getDepartmentCollection: any = () => ([
-    { id: '1', title: 'Development' },
-    { id: '2', title: 'Marketing' },
-    { id: '3', title: 'Accounting' },
-    { id: '4', title: 'HR' },
+    { id: '1', title: 'B.Tech' },
+    { id: '2', title: 'M.Tech' },
+    { id: '3', title: 'MBA' },
+    { id: '4', title: 'Marketing' },
 ])
 
 export function insertEmployee(data: any) {

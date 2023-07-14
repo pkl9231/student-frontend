@@ -42,8 +42,6 @@ export default function useTable(records: any, headCells: any, filterFn: any) {
 
   const TblHead = (props: any) => {
     const handleSortRequest = (cellId: any) => {
-    //   const isAsc: string = orderBy === cellId && order === "asc";
-    //   setOrder("asc");
       setOrderBy(cellId);
     };
 
@@ -84,18 +82,17 @@ export default function useTable(records: any, headCells: any, filterFn: any) {
     setPage(0);
   };
 
-//   const TblPagination = () => (
-//     <TablePagination
-//       component="div"
-//       page = "2" //{page}
-//       rowsPerPageOptions= "3"//{pages}
-//       rowsPerPage={rowsPerPage}
-//       count={records.length}
-//       onChangePage={handleChangePage}
-//       onChangeRowsPerPage={handleChangeRowsPerPage}
-//     />
-//   );
-
+  const TblPagination: any = () => (
+    <TablePagination
+      rowsPerPageOptions={pages}
+      component="div"
+      count={records?.length}
+      rowsPerPage={rowsPerPage}
+      page={page}
+      onPageChange={handleChangePage}
+      onRowsPerPageChange={handleChangeRowsPerPage}
+    />
+  );
   function stableSort(array: any, comparator: any) {
     const stabilizedThis = array.map((el: any, index: any) => [el, index]);
     stabilizedThis.sort((a: any, b: any) => {
@@ -132,7 +129,7 @@ export default function useTable(records: any, headCells: any, filterFn: any) {
   return {
     TblContainer,
     TblHead,
-    // TblPagination,
+    TblPagination,
     recordsAfterPagingAndSorting,
   };
 }
