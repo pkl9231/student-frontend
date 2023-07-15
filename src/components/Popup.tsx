@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Popup(props: any) {
+const Popup = (props: any)=> {
   const { title, children, openPopup, setOpenPopup } = props;
   const classes = useStyles();
 
@@ -49,3 +49,5 @@ export default function Popup(props: any) {
     </Dialog>
   );
 }
+
+export default Popup;

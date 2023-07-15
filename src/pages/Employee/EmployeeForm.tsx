@@ -16,26 +16,36 @@ const initialFValues = {
     name: '',
     email: '',
     mobile: '',
-    city: '',
+    rollNumber: '',
     gender: 'male',
     className: '',
-    hireDate: new Date(),
-    isPermanent: false,
+    // date: new Date(),
+    fathersName:"",
+    password: ""
 }
 
 export default function EmployeeForm(props: any) {
     const { addOrEdit, recordForEdit } = props
 
     const validate = (fieldValues: any = values) => {
+        console.log("getting fieldValues", fieldValues);
         let temp: any = { ...errors }
         if ('name' in fieldValues)
-            temp.fullName = fieldValues?.fullName ? "" : "This field is required."
+            temp.name = fieldValues?.name ? "" : "This field is required."
         if ('email' in fieldValues)
             temp.email = (/$^|.+@.+..+/).test(fieldValues.email) ? "" : "Email is not valid."
         if ('mobile' in fieldValues)
             temp.mobile = fieldValues?.mobile?.length > 9 ? "" : "Minimum 10 numbers required."
         if ('className' in fieldValues)
-            temp.departmentId = fieldValues?.departmentId?.length !== 0 ? "" : "This field is required."
+            temp.className = fieldValues?.className?.length !== 0 ? "" : "This field is required."
+        if ('email' in fieldValues)
+            temp.email = fieldValues?.email ? "" : "This field is required."
+        if ('fathersName' in fieldValues)
+            temp.fathersName = fieldValues?.fathersName ? "" : "This field is required."
+        if ('password' in fieldValues)
+            temp.password = fieldValues?.password ? "" : "This field is required."
+        if ('rollNumber' in fieldValues)
+            temp.rollNumber = fieldValues?.rollNumber ? "" : "This field is required."
         setErrors({
             ...temp
         })
@@ -78,27 +88,28 @@ export default function EmployeeForm(props: any) {
                         label="Full Name"
                         value={values?.name}
                         onChange={handleInputChange}
-                        // error={errors.fullName}
+                        error={errors.name}
                     />
                     <Controls.Input
                         label="Email"
                         name="email"
                         value={values?.email}
                         onChange={handleInputChange}
-                        // error={errors.email}
+                        error={errors.email}
                     />
                     <Controls.Input
                         label="Mobile"
                         name="mobile"
                         value={values?.mobile}
                         onChange={handleInputChange}
-                        // error={errors.mobile}
+                        error={errors.mobile}
                     />
                     <Controls.Input
-                        label="City"
-                        name="city"
-                        value={values?.city}
+                        label="Roll Number"
+                        name="rollNumber"
+                        value={values?.rollNumber}
                         onChange={handleInputChange}
+                        error={errors.rollNumber}
                     />
 
                 </Grid>
@@ -116,20 +127,35 @@ export default function EmployeeForm(props: any) {
                         value={values?.className}
                         onChange={handleInputChange}
                         options={employeeService.getDepartmentCollection()}
-                        // error={errors.departmentId}
+                        error={errors.className}
                     />
-                    <Controls.DatePicker
+                    {/* <Controls.DatePicker
                         name="hireDate"
                         label="Hire Date"
                         value={values?.hireDate}
                         onChange={handleInputChange}
+                    /> */}
+                    <Controls.Input
+                        label="Father Name"
+                        name="fathersName"
+                        value={values?.fathersName}
+                        onChange={handleInputChange}
+                        error={errors.fathersName}
                     />
-                    <Controls.Checkbox
+                    <Controls.Input
+                        label="Password"
+                        name="password"
+                        type="password"
+                        value={values?.password}
+                        onChange={handleInputChange}
+                        error={errors.password}
+                    />
+                    {/* <Controls.Checkbox
                         name="isPermanent"
-                        label="Permanent Employee"
+                        label="Permanent Student"
                         value={values?.isPermanent}
                         onChange={handleInputChange}
-                    />
+                    /> */}
 
                     <div>
                         <Controls.Button

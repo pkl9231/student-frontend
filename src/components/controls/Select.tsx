@@ -7,7 +7,7 @@ import {
   FormHelperText,
 } from "@material-ui/core";
 
-export default function Select(props: any) {
+const Select = (props: any) => {
   const { name, label, value, error = null, onChange, options } = props;
 
   return (
@@ -24,4 +24,6 @@ export default function Select(props: any) {
       {error && <FormHelperText>{error}</FormHelperText>}
     </FormControl>
   );
-}
+};
+
+export default Select;

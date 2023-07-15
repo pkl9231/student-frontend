@@ -59,8 +59,7 @@ export default function Employees() {
       console.log("getting response", res?.data?.data);
       setRecords(res?.data?.data);
     })
-  },[])
-  console.log("getting all employee", records);
+  },[setRecordForEdit])
   const [openPopup, setOpenPopup] = useState(false);
   const [notify, setNotify] = useState({
     isOpen: false,
@@ -90,7 +89,11 @@ export default function Employees() {
   };
 
   const addOrEdit = (employee: any, resetForm: any) => {
-    console.log("employee data", employee);
+    axios.post("http://localhost:4000/student", employee).then((response) => {
+      // setRecords(response.data);
+      console.log("getting response after save", response);
+    });
+    console.log("getting employee details", employee);
     if (employee.id === 0) employeeService.insertEmployee(employee);
     else employeeService.updateEmployee(employee);
     resetForm();
@@ -109,15 +112,20 @@ export default function Employees() {
     setOpenPopup(true);
   };
 
-  const onDelete = (id = "64b0d48726d2ffeaffd3c8e3") => {
+  const onDelete = (id: string) => {
     console.log("getting ID", id);
     setConfirmDialog({
       ...confirmDialog,
       isOpen: false,
     });
-    // employeeService.deleteEmployee(id);
-    axios.delete(`http://localhost:4000/student/64b0ea514babcfad5c940eb4`).then((res:any)=>{
-      console.log("getting response", res?.data?.data);
+    axios.delete(`http://localhost:4000/student/${id}`).then((res:any)=>{
+      let data : any = []
+      data.push(res?.data?.data)
+      let filteredRecords = records.filter(function (currentElement: any) {
+        console.log("getting current element", currentElement);
+        return currentElement._id !== res?.data?.data._id
+      });
+      setRecords(filteredRecords);
     })
     setNotify({
       isOpen: true,
@@ -129,14 +137,14 @@ export default function Employees() {
   return (
     <>
       <PageHeader
-        title="New Employee"
-        subTitle="Form design with validation"
+        title="Students Records"
+        subTitle=""
         icon={<PeopleOutlineTwoToneIcon fontSize="large" />}
       />
       <Paper className={classes.pageContent}>
         <Toolbar>
           <Controls.Input
-            label="Search Employees"
+            label="Search Students"
             className={classes.searchInput}
             InputProps={{
               startAdornment: (
@@ -200,7 +208,7 @@ export default function Employees() {
         <TblPagination />
       </Paper>
       <Popup
-        title="Employee Form"
+        title="Student Form"
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
       >

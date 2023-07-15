@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function useTable(records: any, headCells: any, filterFn: any) {
+const useTable = (records: any, headCells: any, filterFn: any) => {
   const classes = useStyles();
 
   const pages = [5, 10, 25];
@@ -133,3 +133,6 @@ export default function useTable(records: any, headCells: any, filterFn: any) {
     recordsAfterPagingAndSorting,
   };
 }
+
+
+export default useTable;

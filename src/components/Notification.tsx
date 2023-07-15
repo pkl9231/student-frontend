@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Notification(props: any) {
+const Notification = (props: any) => {
   const { notify, setNotify } = props;
   const classes = useStyles();
 
@@ -35,4 +35,6 @@ export default function Notification(props: any) {
       </Alert>
     </Snackbar>
   );
-}
+};
+
+export default Notification;
